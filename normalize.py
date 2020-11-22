@@ -138,5 +138,5 @@ def startNormalize():
             print("Success")
       else:
             print("Failed")
-if __name__ == "__main__":
-      startNormalize()
+# if __name__ == "__main__":
+#       startNormalize()
