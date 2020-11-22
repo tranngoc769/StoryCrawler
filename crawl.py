@@ -43,3 +43,41 @@ def getListChapter(url):
     a_element = lastChapter.find_all('a')[0]
     totalChapter = getChapter(a_element.text)
     return totalChapter
+
+def getTextOfPage(url, storyName, chapter): #url, laohac,15
+    global wd
+    print("Crawl : "+ url)
+    storyName = storyName +"_chuong"+ str(chapter)+".txt"
+    if os.path.isfile(storyName) == True:
+        return
+    wd.get(url)
+    soup = BeautifulSoup(wd.page_source, features="lxml")
+    items = soup.find_all('div', {'id','chapter-c' })[0]
+    # print(items.text)
+    writeFile(storyName, items.text)
+
+def writeFile(filename, content):
+    with open(filename, 'w', encoding="UTF-8") as writer:
+        writer.write(content)
+def crawStoryUrl(url, dirout = "textdir"):
+    if os.path.isdir(dirout) == False:
+        os.mkdir(dirout)
+    if (url[len(url)-1] != "/"):
+        url += "/"
+    temp = url.split("/")
+    storyName = dirout + "/" + temp[len(temp)-2].replace("-","")
+    totalPage = getListChapter(url)
+    # exp : 81
+    for chapter in range(1,totalPage+1):
+        getTextOfPage(url+'chuong-'+str(chapter),storyName,chapter)
+dirname = "textdir"
+urlPath = 'url.txt'
+# main(url)
+import normalize
+if __name__ == "__main__":
+    listUrl = getListUrl(urlPath)
+    for url in listUrl:
+        crawStoryUrl(url)
+    normalize.startNormalize()
+    # main(url)
+    
