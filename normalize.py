@@ -12,3 +12,15 @@ parser.add_argument('-o','--output', help='Path of output text file', required=T
 # fileOut = args['output']
 textDir = "txtdir"
 fileOut = "output.txt"
+def normalize_text(text):
+      text = text.strip()
+      text = re.sub(r'[/\\~@#$%^&*()_\--/*<>,“”;"]',' ', text)
+      text = text.replace("="," ")
+      text = text.replace("+"," ")
+      text = re.sub(' +', ' ',text)
+      text = re.sub('\?+', '.',text)
+      text = re.sub(':+', '.',text)
+      text = re.sub('!+', '.',text)
+      out = re.sub('\.+', '.',text)
+      out = out.replace("…",".")
+      return out
