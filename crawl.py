@@ -12,3 +12,11 @@ options.add_argument('--disable-gpu')
 options.add_argument('--log-level=3')
 options.add_argument('-disable-dev-shm-usage')
 wd = webdriver.Chrome('chromedriver.exe',options=options)
+
+
+def getListUrl(path = "url.txt"):
+    listString = []
+    with open(path, encoding="UTF-8", mode="r") as f:
+        listString = f.readlines()
+        listString = [x.strip() for x in listString]
+    return listString
