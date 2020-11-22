@@ -86,3 +86,57 @@ def numberToText(number, prefix =""):
                         result+= " " +numberToText(remainder)
                   break
       return prefix + result + decTxt
+def checkNumberInSentense(text):
+      temp = []
+      check = True
+      for s in text.split():
+            if s.isdigit():
+                  s = numberToText(int(s))
+                  check = False
+            temp.append(s)
+      totalWord = len(temp)
+      if (totalWord < 3 and check == False):
+            totalWord = 0
+      return totalWord, " ".join(temp)
+def Normalize_File():
+      if os.path.isdir(textDir) == False:
+            print("Not found folder")
+            return False
+      listFile = getTextFileInFolder(textDir)
+      with open(fileOut, encoding="UTF-8", mode="w") as fOut:
+            for filename in listFile:
+                  with open(filename, encoding="UTF-8", mode="r") as f:
+                        print("File : "+ filename)
+                        listString = f.readlines()
+                        listString = [x.strip() for x in listString] 
+                        content = (" ".join(listString)).split(".")
+                        totalLine = len(content)
+                        start = 0
+                        for text in content:
+                              out = normalize_text(text)
+                              subTextArr = out.split(".")
+                              for subText in subTextArr:
+                                    subText = subText.strip()
+                                    totalWord, solveString = checkNumberInSentense(subText)
+                                    if (totalWord != 0):
+                                          fOut.write(solveString.strip() + "\n")
+                              start+= 1
+                              # print(str(start)+"/"+str(totalLine))
+      return True
+# import re
+# text = "   Bắt~!@#$%^&*()_\\-=+/*<>đầu từ-gà gáy một tiếng, trâu bò lục-tục kéo thợ cầy đến đoạn đường phía trong điếm tuần.... - Mọi ngày, giờ ấy, những con-vật này cũng như những người cổ cầy, vai bừa kia, đã lần-lượt đi mò ra ruộng làm việc cho chủ."
+# print(out)
+def getTextFileInFolder(folder):
+      listFile = []
+      for file in os.listdir(folder):
+          if file.endswith(".txt"):
+            listFile.append(os.path.join(folder, file))
+      return listFile
+def startNormalize():
+      stt = Normalize_File()
+      if (stt):
+            print("Success")
+      else:
+            print("Failed")
+if __name__ == "__main__":
+      startNormalize()
