@@ -20,3 +20,26 @@ def getListUrl(path = "url.txt"):
         listString = f.readlines()
         listString = [x.strip() for x in listString]
     return listString
+# getListChapter("https://truyenfull.vn/toi-thay-hoa-vang-tren-co-xanh/")
+
+def getChapter(text):
+    pos = text.find(':')
+    if (pos== -1): pos = len(text)
+    chap = text[0:pos]
+    return [int(s) for s in chap.split() if s.isdigit()][0]
+def getListChapter(url):
+    global wd
+    wd.get(url)
+    soup = BeautifulSoup(wd.page_source, features="lxml")
+    isPanigation = soup.find_all('ul', {'class','pagination pagination-sm'})
+    if len(isPanigation) != 0:
+        lastAPageElement = isPanigation[len(isPanigation)- 1].find_all('a')[0]
+        newUrl = lastAPageElement.attrs['href']
+        wd.get(newUrl)
+        soup = BeautifulSoup(wd.page_source, features="lxml")
+    ColumsChapters = soup.find_all('ul', {'class','list-chapter' })
+    listEndChapters = ColumsChapters[len(ColumsChapters)-1].contents
+    lastChapter = listEndChapters[len(listEndChapters) - 1]
+    a_element = lastChapter.find_all('a')[0]
+    totalChapter = getChapter(a_element.text)
+    return totalChapter
